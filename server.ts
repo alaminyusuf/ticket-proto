@@ -8,7 +8,7 @@ async function main() {
 	const server = express();
 	const upload = multer();
 	const mailer = nodemailer.createTransport({
-		host: "my.smtp.host",
+		host: "smtp.gmail.com",
 		port: 465,
 		secure: true,
 		auth: {
@@ -31,15 +31,13 @@ async function main() {
 			sender: `${data.name} <${data.email}>`,
 			to: process.env.EMAIL,
 			subject: data.subject,
-			text: `${data.name} <${data.email}> \n${data.message}`,
+			html: `<h1>${data.name}</h1> <p> ${data.email} </p> \n<p style="font-size: 1.4rem">${data.message}</p>`,
 		};
 		mailer.sendMail(mail, (err, data) => {
-			console.log(data);
 			if (err) {
-				console.log(err);
-				res.status(500).send("Something went wrong.");
+				res.status(500).send("Something went wrong. ❕");
 			} else {
-				res.status(200).send("Email successfully sent to recipient!");
+				res.status(200).redirect("/");
 			}
 		});
 	});
